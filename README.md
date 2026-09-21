@@ -26,3 +26,19 @@
 저장소에 남아 있는 이전 확장 설계 문서와 도구는 삭제하지 않습니다. 원본 구조·세이브·ID·용량 연구 자료로 보존하며, GBA 리메이크에 필요한 내용만 새 런타임 설계로 옮깁니다.
 
 ROM 바이너리는 GitHub에 커밋하지 않습니다.
+
+## ROM/SAV 기반 확장
+
+확장은 추정치가 아니라 실제 RED 입력을 먼저 검사한 뒤 진행합니다.
+
+- ROM 기준선: `research/rom-baselines.csv`
+- SAV 기준선: `research/save-baselines.csv`
+- JP / International 세이브 구조: `manifests/save-layouts.yml`
+- ROM/SAV → canonical 어댑터: `src/source_formats/gen1_red.py`
+- 확장 판단 보고서: `analysis/rom-save-expansion-audit.md`
+- target 엔진 첫 용량 패치: `patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch`
+
+실측 결과 일본 赤는 512 KiB/MBC1, 국제판은 1 MiB/MBC3 또는 MBC5이며,
+SAV도 일본판과 국제판의 레이아웃이 다릅니다. 따라서 원본 주소나 세이브
+오프셋을 하나로 가정하지 않고 각 source adapter로 canonical 데이터에
+변환한 뒤 GBA 런타임에 넣습니다.
