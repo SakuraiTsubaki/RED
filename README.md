@@ -31,6 +31,9 @@ See:
 - `manifests/engine-base.yml`
 - `manifests/registries/README.md`
 - `tools/validate_expansion_policy.py`
+- `analysis/engine-capacity-audit.md`
+- `docs/PERSISTENT_MON_LAYOUT.md`
+- `tools/audit_upstream_capacity.py`
 
 Validate the policy with:
 
