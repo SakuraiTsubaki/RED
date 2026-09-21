@@ -1,100 +1,28 @@
 # RED
 
-Pokémon Red remake project using verified Generation I source ROM/save evidence
-and a Generation III-derived expanded runtime.
+**ポケットモンスター 赤** (Generation I)를 **Game Boy Advance / Generation III 계열 기반의 현대화 리메이크**로 재구축하는 저장소입니다.
 
-RED does **not** begin by guessing a future engine layout. The source ROMs and
-save files are identified first, parsed through release-aware adapters, converted
-to stable RED canonical data, and only then serialized into the expanded target
-runtime.
+## 현재 정본 방향
 
-## Phase 0A — source ROM/SAV evidence
+- 일본판 원작과 모든 확인된 revision을 원전으로 전수조사합니다.
+- 원작의 지역, 스토리, 이벤트, NPC, 버전 고유 요소는 보존합니다.
+- 포켓몬/타입/특성/기술/진화/폼/아이템/전투·육성 규칙은 현재 검증 가능한 최신 공식 기준으로 현대화합니다.
+- 최종 실행 대상은 **GBA**입니다.
+- GB/GBC mapper, SRAM, 원본 주소 구조는 원본 분석 자료로 보존하지만 최종 런타임 엔진으로 사용하지 않습니다.
+- 미출시·미검증 세대 콘텐츠는 추측하지 않습니다.
 
-Supplied RED baselines have been inspected and registered.
+## 기반
 
-Observed ROM families:
+- 원본 조사: `SakuraiTsubaki/PocketMonsters-Aka-Disassembly`
+- 공통 현대화 연구: `SakuraiTsubaki/EMERALD`
+- 현대 코어 기준: `rh-hideout/pokeemerald-expansion@75b806a3ab57a81ff1eb6179288981f0b3cc3050`
 
-- Japanese Red Rev 0 / Rev A: 512 KiB, 32 x 16 KiB ROM banks, MBC1, 32 KiB SRAM.
-- English Red (USA/Europe): 1 MiB, 64 banks, MBC3, 32 KiB SRAM.
-- German/French/Italian/Spanish Red: 1 MiB, 64 banks, MBC5, 32 KiB SRAM.
+## 문서
 
-Observed save families:
+- `PROJECT.md` — 현재 프로젝트 방향의 정본
+- `config/remake.json` — 기계 판독 가능한 작품/엔진/원본 기준
+- `docs/REMAKE_POLICY.md` — 원작 보존과 최신화 정책
 
-- Japanese main-data checksum byte: `0x3594`
-- International main-data checksum byte: `0x3523`
-- both begin the checked main-data range at `0x2598`
-- cartridge SRAM is `0x8000` bytes
-- non-cartridge emulator footer data is stripped before parsing
+저장소에 남아 있는 이전 확장 설계 문서와 도구는 삭제하지 않습니다. 원본 구조·세이브·ID·용량 연구 자료로 보존하며, GBA 리메이크에 필요한 내용만 새 런타임 설계로 옮깁니다.
 
-Evidence:
-
-- `research/rom-baselines.csv`
-- `research/save-baselines.csv`
-- `analysis/rom-save-expansion-audit.md`
-- `manifests/source-adapters.yml`
-- `tools/inspect_red_inputs.py`
-
-ROM and save binaries are not committed.
-
-## Phase 0B — Generation 10-ready target expansion
-
-After source parsing, RED targets a reproducible
-`rh-hideout/pokeemerald-expansion` baseline and keeps project identities
-independent from upstream enum order.
-
-Foundation rules:
-
-- canonical species/form/move/ability/item/type/evolution IDs are at least 16-bit;
-- species and forms have separate canonical identities;
-- maps, scripts, text, graphics and audio use 32-bit project resource keys;
-- generation is metadata, never a hard-coded final array bound;
-- source save layouts are import schemas, not RED's target save layout;
-- RED target saves are versioned and migratable;
-- engine enum values are adapter values, not permanent RED identities;
-- Generation 10 capacity is reserved without inventing unreleased data;
-- the same design must remain usable for Generation 11+.
-
-The first target-engine patch is already staged:
-
-- `patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch`
-  - persistent species/form ID: 11 -> 16 bits
-  - persistent held-item ID: 10 -> 16 bits
-  - `PokemonSubstruct0` remains 12 bytes
-
-Related files:
-
-- `docs/GEN10_EXPANSION.md`
-- `config/expansion-capacity.json`
-- `manifests/engine-base.yml`
-- `manifests/registries/README.md`
-- `analysis/engine-capacity-audit.md`
-- `docs/PERSISTENT_MON_LAYOUT.md`
-- `tools/validate_expansion_policy.py`
-- `tools/audit_upstream_capacity.py`
-- `patches/README.md`
-
-## Order of work
-
-1. Register and verify every supplied Japanese/localized Red ROM and save.
-2. Finish Japanese and International source ROM/save adapters.
-3. Extract source data into stable RED canonical registries.
-4. Import the pinned expanded Generation III runtime into RED.
-5. Apply and compile the persistent-ID capacity patch.
-6. Define RED target-save schema and source-save migration tests.
-7. Import the Japanese Red game baseline first.
-8. Map localized Red releases onto the same canonical data.
-9. Add later-generation mechanics/data through registries without renumbering
-   existing RED identities.
-
-Run the source inspector on legally obtained local inputs:
-
-```sh
-python tools/inspect_red_inputs.py path/to/red.gb path/to/red.sav
-```
-
-Run target capacity policy checks with:
-
-```sh
-python tools/validate_expansion_policy.py
-python tools/audit_upstream_capacity.py /path/to/pokeemerald-expansion
-```
+ROM 바이너리는 GitHub에 커밋하지 않습니다.
