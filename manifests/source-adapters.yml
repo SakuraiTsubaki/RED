@@ -1,0 +1,45 @@
+schema_version: 1
+source_family: pokemon-red-generation-i
+principle: parse-source-to-canonical-then-serialize-target
+
+adapters:
+  japanese-red:
+    rom:
+      controller: MBC1
+      observed_rom_bytes: 524288
+      observed_rom_banks_16k: 32
+      declared_sram_bytes: 32768
+      revisions:
+        - id: jp-red-rev0
+          header_version: 0
+        - id: jp-red-reva
+          header_version: 1
+    save:
+      cartridge_sram_bytes: 32768
+      main_data_start: 0x2598
+      observed_checksum_offset: 0x3594
+      layout_family: japanese
+      rule: do-not-reinterpret-as-international
+
+  international-red:
+    rom:
+      observed_rom_bytes: 1048576
+      observed_rom_banks_16k: 64
+      declared_sram_bytes: 32768
+      controller_by_release:
+        en-red-int: MBC3
+        de-red: MBC5
+        fr-red: MBC5
+        it-red: MBC5
+        es-red: MBC5
+    save:
+      cartridge_sram_bytes: 32768
+      main_data_start: 0x2598
+      observed_checksum_offset: 0x3523
+      layout_family: international
+      rule: strip-non-cartridge-footer-before-parse
+
+target:
+  runtime_family: generation-iii-derived-expanded
+  source_rom_banking_is_provenance_not-runtime-capacity
+  source_save_layout_is-import-schema-not-target-save-layout
