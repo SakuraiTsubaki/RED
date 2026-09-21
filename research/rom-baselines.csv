@@ -1,0 +1,8 @@
+id,region,language,revision,rom_size_bytes,rom_banks_16k,cartridge_type,cartridge_type_code,declared_sram_bytes,header_version,sgb_flag,cgb_flag,destination_code,sha1,sha256,header_checksum_ok,global_checksum_ok
+jp-red-rev0,Japan,Japanese,0,524288,32,MBC1+RAM+BATTERY,0x03,32768,0,0x03,0x00,0,0623ad12f48c259447980d68bd85ddbf8204b2cd,392ce450d708c8d127aaed7afc20001a48625bd83a5fa5325be82f5c0972ccfa,true,true
+jp-red-reva,Japan,Japanese,1,524288,32,MBC1+RAM+BATTERY,0x03,32768,1,0x03,0x00,0,ef74c79cded14204ac79e77f4964d9cb25003120,751abb1fb2b2d6b91dc631fa10ed36bd07f682cb5c3febe6c8f0e3dabc1fae1c,true,true
+en-red-int,USA-Europe,English,0,1048576,64,MBC3+RAM+BATTERY,0x13,32768,0,0x03,0x00,1,ea9bcae617fdf159b045185467ae58b2e4a48b9a,5ca7ba01642a3b27b0cc0b5349b52792795b62d3ed977e98a09390659af96b7b,true,true
+de-red,Germany,German,0,1048576,64,MBC5+RAM+BATTERY,0x1B,32768,0,0x03,0x00,1,87d523fe1a0c548db7c5477b451ddec1eb083c06,9cd186b288dbcd52413d561ae449f1f700c32b45af56dbf849095d4a0c8637a6,true,true
+fr-red,France,French,0,1048576,64,MBC5+RAM+BATTERY,0x1B,32768,0,0x03,0x00,1,47a7622fa30e6402a3891fe65b3a930bf9bd7aec,23766290f3b2347f815f1e8977c3b84047ed880cadda8c4f1a3595a633daa303,true,true
+it-red,Italy,Italian,0,1048576,64,MBC5+RAM+BATTERY,0x1B,32768,0,0x03,0x00,1,65b97cf8f2f1cff711a6d08c6c894c8ce65ce522,e805d00b0002156d38b96efd57c823b0db3a3ef4cd32f98bd9bb4779bda3dd5b,true,true
+es-red,Spain,Spanish,0,1048576,64,MBC5+RAM+BATTERY,0x1B,32768,0,0x03,0x00,1,fc17c5b904d551b1b908054ccd1c493f755f832a,a756cf7ad888aa46de4b9699a177a0edf1775e59eb6330014c6f5c139be9c45d,true,true
