@@ -1,0 +1,75 @@
+schema_version: 1
+source: Generation I Pokemon Red raw SRAM
+cartridge_sram_bytes: 0x8000
+main_data_start: 0x2598
+
+layouts:
+  japanese:
+    checksum_offset: 0x3594
+    box_count: 8
+    slots_per_box: 30
+    max_trainer_name_chars: 5
+    max_nickname_chars: 5
+    offsets:
+      dex_caught: 0x259E
+      dex_seen: 0x25B1
+      items: 0x25C4
+      money: 0x25EE
+      rival: 0x25F1
+      options: 0x25F7
+      badges: 0x25F8
+      trainer_id: 0x25FB
+      pc_items: 0x27DC
+      current_box_index: 0x2842
+      event_work: 0x2892
+      starter: 0x29B9
+      event_flags: 0x29E9
+      play_time: 0x2CA0
+      daycare: 0x2CA7
+      party: 0x2ED5
+      current_box: 0x302D
+    evidence:
+      local_samples:
+        - jp-red-rev0-save
+        - jp-red-reva-save
+      implementation_crosscheck:
+        repository: kwsch/PKHeX
+        path: PKHeX.Core/Saves/SAV1.cs
+        offsets_path: PKHeX.Core/Saves/Substructures/Gen12/SAV1Offsets.cs
+
+  international:
+    checksum_offset: 0x3523
+    box_count: 12
+    slots_per_box: 20
+    max_trainer_name_chars: 7
+    max_nickname_chars: 10
+    offsets:
+      dex_caught: 0x25A3
+      dex_seen: 0x25B6
+      items: 0x25C9
+      money: 0x25F3
+      rival: 0x25F6
+      options: 0x2601
+      badges: 0x2602
+      trainer_id: 0x2605
+      pc_items: 0x27E6
+      current_box_index: 0x284C
+      event_work: 0x289C
+      starter: 0x29C3
+      event_flags: 0x29F3
+      play_time: 0x2CED
+      daycare: 0x2CF4
+      party: 0x2F2C
+      current_box: 0x30C0
+    evidence:
+      local_samples:
+        - en-red-int-save
+        - de-red-save
+        - fr-red-save
+        - it-red-save
+        - es-red-save
+      implementation_crosscheck:
+        repository: pret/pokered
+        path: ram/sram.asm
+        save_code_path: engine/menus/save.asm
+        additional_repository: kwsch/PKHeX
