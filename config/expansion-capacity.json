@@ -107,6 +107,41 @@
     "tera_type_bits_minimum": 5,
     "pokeball_bits_minimum": 6,
     "pokemon_substruct0_bytes": 12,
-    "require_no_substruct0_growth": true
+    "require_no_substruct0_growth": true,
+    "patch": "patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch"
+  },
+  "source_evidence": {
+    "required_before_target_runtime_freeze": true,
+    "rom_baselines": 7,
+    "save_baselines": 7,
+    "source_adapters": [
+      "japanese-red",
+      "international-red"
+    ],
+    "japanese": {
+      "observed_rom_bytes": 524288,
+      "observed_rom_banks_16k": 32,
+      "cartridge_controller": "MBC1",
+      "declared_sram_bytes": 32768,
+      "main_data_start": 9624,
+      "checksum_offset": 13716
+    },
+    "international": {
+      "observed_rom_bytes": 1048576,
+      "observed_rom_banks_16k": 64,
+      "cartridge_controllers": [
+        "MBC3",
+        "MBC5"
+      ],
+      "declared_sram_bytes": 32768,
+      "main_data_start": 9624,
+      "checksum_offset": 13603
+    },
+    "rules": [
+      "strip-bytes-beyond-declared-cartridge-sram-before-save-parse",
+      "never-assume-one-mbc-or-one-rom-bank-count-for-all-red-releases",
+      "never-reinterpret-japanese-save-layout-as-international",
+      "parse-source-to-canonical-before-target-serialization"
+    ]
   }
 }
