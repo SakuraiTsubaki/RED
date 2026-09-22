@@ -10,52 +10,57 @@ RED repacks existing bits so neither BoxPokemon nor PokemonSubstruct3 grows.
 
 --- a/include/pokemon.h
 +++ b/include/pokemon.h
-@@ -186,11 +186,10 @@
- struct PokemonSubstruct3
- {
+@@ -188,8 +188,7 @@
      u8 pokerus;
      u8 metLocation;
-     u16 metLevel:7;
+-    u16 metLevel:7;
 -    u16 metGame:4;
-+    u16 metGame:5; // 31 origin-game IDs.
-     u16 dynamaxLevel:4;
+-    u16 dynamaxLevel:4;
 -    u16 otGender:1;
++    u16 metLevel:7;
++    u16 metGame:5; // 31 origin-game IDs.
++    u16 dynamaxLevel:4;
      u32 hpIV:5;
      u32 attackIV:5;
-     u32 defenseIV:5;
 @@ -217,7 +216,7 @@
-     u32 earthRibbon:1; // Given to teams that have beaten Mt. Battle's 100-battle challenge in Colosseum/XD.
-     u32 worldRibbon:1; // Distributed during Pokémon Festa '04 and '05 to tournament winners.
-     u32 isShadow:1;
+     u32 earthRibbon:1;    // Given to teams that have beaten Mt. Battle's 100-battle challenge in Colosseum/XD.
+     u32 worldRibbon:1;    // Distributed during Pokémon Festa '04 and '05 to tournament winners.
+-    u32 isShadow:1;
 -    u32 unused_0B:1;
+-    u32 abilityNum:2;
++    u32 isShadow:1;
 +    u32 otGender:1;
-     u32 abilityNum:2;
++    u32 abilityNum:2;
  
      // The functionality of this bit changed in FRLG:
-@@ -258,16 +257,15 @@
- struct BoxPokemon
- {
-     u32 personality;
+@@ -261,12 +260,11 @@
      u32 otId;
      u8 nickname[min(10, POKEMON_NAME_LENGTH)];
 -    u8 language:3;
 -    u8 hiddenNatureModifier:5; // 31 natures.
-+    u8 language:4; // 15 language IDs plus NONE/reserved.
-     u8 isBadEgg:1;
-     u8 hasSpecies:1;
-     u8 isEgg:1;
-     u8 blockBoxRS:1; // Unused, but Pokémon Box Ruby & Sapphire will refuse to deposit a Pokémon with this flag set.
-+    u8 hiddenNatureModifier:5; // 31 natures.
-     u8 daysSinceFormChange:3; // 7 days.
+-    u8 isBadEgg:1;
+-    u8 hasSpecies:1;
+-    u8 isEgg:1;
+-    u8 blockBoxRS:1; // Unused, but Pokémon Box Ruby & Sapphire will refuse to deposit a Pokémon with this flag set.
+-    u8 daysSinceFormChange:3; // 7 days.
 -    u8 unused_13:1;
++    u8 language:4; // 15 language IDs plus NONE/reserved.
++    u8 isBadEgg:1;
++    u8 hasSpecies:1;
++    u8 isEgg:1;
++    u8 blockBoxRS:1; // Unused, but Pokémon Box Ruby & Sapphire will refuse to deposit a Pokémon with this flag set.
++    u8 hiddenNatureModifier:5; // 31 natures.
++    u8 daysSinceFormChange:3; // 7 days.
      u8 otName[PLAYER_NAME_LENGTH];
      u8 markings:4;
-     u8 compressedStatus:4;
 --- a/src/pokemon.c
 +++ b/src/pokemon.c
-@@ -770,3 +770,5 @@
+@@ -768,5 +768,7 @@
  };
  
+-STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
 +STATIC_ASSERT(NUM_LANGUAGES < 16, RED_BoxPokemon_language_PotentiallyTooSmall);
 +STATIC_ASSERT(NUM_VERSIONS < 32, RED_PokemonSubstruct3_metGame_PotentiallyTooSmall);
- STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
++STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
+ 
+ static u32 CompressStatus(u32 status)
