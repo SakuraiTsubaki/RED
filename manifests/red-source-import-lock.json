@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "generated_from_local_japan_census": true,
+  "rom_binaries_committed": false,
+  "default_profile": "jp-red-reva",
+  "profiles": {
+    "jp-red-rev0": {
+      "revision": "Rev 0",
+      "filename": "Pocket Monsters - Aka (Japan) (SGB Enhanced).gb",
+      "size_bytes": 524288,
+      "sha1": "0623ad12f48c259447980d68bd85ddbf8204b2cd",
+      "sha256": "392ce450d708c8d127aaed7afc20001a48625bd83a5fa5325be82f5c0972ccfa",
+      "rom_verified": true,
+      "tables": {
+        "base-stats": {"rows": 151, "sha256": "f4f768a6ebb34eb7e0207cdadc8d20e344e5e433b2d9161b462d3552a1226029"},
+        "moves": {"rows": 165, "sha256": "1987f706363f904b2ad8b5b34100f31f32ec9dd236b4eaaba37e5fb5f0a0212b"},
+        "evolutions": {"rows": 72, "sha256": "6eedc959d0d86e22be8601b1695ce4751ba1b31d0ee1554c295b471fc3536906"},
+        "levelup-learnsets": {"rows": 728, "sha256": "8f1dc20b6121ae8016190581b12757205b805931dfe355c2741147a9ceb08080"},
+        "trainers": {"rows": 994, "sha256": "4f4b68cf6ebc8863eb36623b4735a83b8f114192770860ef5acdcc1fd287c5f1"},
+        "wild-standard": {"rows": 580, "sha256": "ae254ce12d8461a446b7c424bb7d5383621beb29d2567ea97bcae45a4980eb28"},
+        "map-events": {"rows": 226, "sha256": "ef55f01f7123d02acfd944d9da80a5c91261a82262739bddb6f6cbcf02275010"},
+        "map-script-roots": {"rows": 226, "sha256": "0ef45e1cf79b06ed0d3ecae56801cb035ecb7ac6f10e850a4c13f74a4dea3929"}
+      }
+    },
+    "jp-red-reva": {
+      "revision": "Rev A",
+      "filename": "Pocket Monsters - Aka (Japan) (Rev A) (SGB Enhanced).gb",
+      "size_bytes": 524288,
+      "sha1": "ef74c79cded14204ac79e77f4964d9cb25003120",
+      "sha256": "751abb1fb2b2d6b91dc631fa10ed36bd07f682cb5c3febe6c8f0e3dabc1fae1c",
+      "rom_verified": true,
+      "tables": {
+        "base-stats": {"rows": 151, "sha256": "34cbfa1e3c9170b9ce5ad5f1449025e4480992670f46da471c550e4701b1351b"},
+        "moves": {"rows": 165, "sha256": "1ef3e2c996b7d2669a6976b0f35f57cff55bd91065e1f6edaf792177adb70a24"},
+        "evolutions": {"rows": 72, "sha256": "9199bb10b8774bb0c10a37cab2948d37892ef26231e03b026d8e4d8496b26521"},
+        "levelup-learnsets": {"rows": 728, "sha256": "1fd32fac1012503128472b15462221456cd4c44097b2898a7c9080eb9f3cb932"},
+        "trainers": {"rows": 994, "sha256": "d4d911b94c05d2fcafa0361d03d876d31b15a2d937d90ea2e6efc1d9a2a159c9"},
+        "wild-standard": {"rows": 580, "sha256": "582df1995bef5b54ea96b7b08d9e4bdce52e5d097fa96b793c7f161094965121"},
+        "map-events": {"rows": 226, "sha256": "2816c29e873aadc29af9e98382a4801d2454164a49ec1d10d1179369098b8b24"},
+        "map-script-roots": {"rows": 226, "sha256": "382b29593b891f4dc13fa553bc24274ad9a231b60ed78dea5102435b7695d072"}
+      }
+    }
+  }
+}
