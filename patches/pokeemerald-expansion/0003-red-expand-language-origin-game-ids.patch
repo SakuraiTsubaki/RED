@@ -55,12 +55,9 @@ RED repacks existing bits so neither BoxPokemon nor PokemonSubstruct3 grows.
      u8 markings:4;
 --- a/src/pokemon.c
 +++ b/src/pokemon.c
-@@ -768,5 +768,7 @@
+@@ -768,3 +768,5 @@
  };
  
--STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
 +STATIC_ASSERT(NUM_LANGUAGES < 16, RED_BoxPokemon_language_PotentiallyTooSmall);
 +STATIC_ASSERT(NUM_VERSIONS < 32, RED_PokemonSubstruct3_metGame_PotentiallyTooSmall);
-+STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
- 
- static u32 CompressStatus(u32 status)
+ STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
