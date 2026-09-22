@@ -24,9 +24,9 @@ def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProces
 
 
 def patch_state(engine_dir: Path, patch: Path) -> str:
-    if git(engine_dir, "apply", "--check", str(patch), check=False).returncode == 0:
+    if git(engine_dir, "apply", "--recount", "--check", str(patch), check=False).returncode == 0:
         return "pending"
-    if git(engine_dir, "apply", "--reverse", "--check", str(patch), check=False).returncode == 0:
+    if git(engine_dir, "apply", "--recount", "--reverse", "--check", str(patch), check=False).returncode == 0:
         return "already-applied"
     return "conflict"
 
@@ -48,7 +48,7 @@ def main() -> int:
         if state == "conflict":
             raise SystemExit(f"patch does not apply cleanly: {patch.name}")
         if state == "pending" and not args.check_only:
-            git(engine, "apply", str(patch.resolve()))
+            git(engine, "apply", "--recount", str(patch.resolve()))
             state = "applied"
         rows.append({"patch": patch.name, "state": state})
 
