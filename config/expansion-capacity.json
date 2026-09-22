@@ -96,7 +96,10 @@
       "move_bits": 11,
       "tera_type_bits": 5,
       "pokeball_bits": 6,
-      "pokemon_substruct0_bytes": 12
+      "pokemon_substruct0_bytes": 12,
+      "language_bits": 3,
+      "met_game_bits": 4,
+      "pokemon_substruct3_bytes": 12
     }
   },
   "red_runtime_persistence_target": {
@@ -108,7 +111,15 @@
     "pokeball_bits_minimum": 6,
     "pokemon_substruct0_bytes": 12,
     "require_no_substruct0_growth": true,
-    "patch": "patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch"
+    "patch": "patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch",
+    "language_bits": 4,
+    "met_game_bits": 5,
+    "pokemon_substruct3_bytes": 12,
+    "require_no_substruct3_growth": true,
+    "patches": [
+      "patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch",
+      "patches/pokeemerald-expansion/0003-red-expand-language-origin-game-ids.patch"
+    ]
   },
   "source_evidence": {
     "required_before_target_runtime_freeze": true,
@@ -142,6 +153,32 @@
       "never-assume-one-mbc-or-one-rom-bank-count-for-all-red-releases",
       "never-reinterpret-japanese-save-layout-as-international",
       "parse-source-to-canonical-before-target-serialization"
+    ]
+  },
+  "gba_runtime_budget": {
+    "addressable_rom_bytes": 33554432,
+    "ewram_bytes": 262144,
+    "iwram_bytes": 32768,
+    "verified_build": {
+      "commit": "ca27730680a3ea848d22bfcadcd290d5efca2c71",
+      "workflow_run_id": 35753183278,
+      "rom_used_bytes": 26959684,
+      "rom_free_bytes": 6594748,
+      "rom_used_percent": 80.35,
+      "ewram_used_bytes": 226700,
+      "ewram_free_bytes": 35444,
+      "ewram_used_percent": 86.48,
+      "iwram_used_bytes": 28628,
+      "iwram_free_bytes": 4140,
+      "iwram_used_percent": 87.37,
+      "built_rom_file_bytes": 33554432,
+      "result": "success"
+    },
+    "policy": [
+      "the-32-mib-rom-file-is-a-container-limit-not-used-space",
+      "track-linker-region-usage-on-every-runtime-build",
+      "do-not-claim-generation-10-data-fits-until-verified-data-is-built",
+      "rom-binaries-remain-ephemeral-and-are-not-committed-or-uploaded-as-artifacts"
     ]
   }
 }
