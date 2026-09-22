@@ -23,12 +23,18 @@ def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProces
     )
 
 
-def patch_state(engine_dir: Path, patch: Path) -> str:
-    if git(engine_dir, "apply", "--check", str(patch), check=False).returncode == 0:
-        return "pending"
-    if git(engine_dir, "apply", "--reverse", "--check", str(patch), check=False).returncode == 0:
-        return "already-applied"
-    return "conflict"
+def patch_state(engine_dir: Path, patch: Path) -> tuple[str, str]:
+    forward = git(engine_dir, "apply", "--verbose", "--check", str(patch), check=False)
+    if forward.returncode == 0:
+        return "pending", forward.stderr
+    reverse = git(engine_dir, "apply", "--verbose", "--reverse", "--check", str(patch), check=False)
+    if reverse.returncode == 0:
+        return "already-applied", reverse.stderr
+    detail = (
+        "forward check:\n" + forward.stderr.strip()
+        + "\nreverse check:\n" + reverse.stderr.strip()
+    )
+    return "conflict", detail
 
 
 def main() -> int:
@@ -44,9 +50,11 @@ def main() -> int:
 
     rows = []
     for patch in sorted(PATCH_DIR.glob("*.patch")):
-        state = patch_state(engine, patch.resolve())
+        state, detail = patch_state(engine, patch.resolve())
         if state == "conflict":
-            raise SystemExit(f"patch does not apply cleanly: {patch.name}")
+            raise SystemExit(
+                f"patch does not apply cleanly: {patch.name}\n{detail}"
+            )
         if state == "pending" and not args.check_only:
             git(engine, "apply", str(patch.resolve()))
             state = "applied"
