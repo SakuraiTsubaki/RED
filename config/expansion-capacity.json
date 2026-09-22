@@ -160,10 +160,10 @@
     "ewram_bytes": 262144,
     "iwram_bytes": 32768,
     "verified_build": {
-      "commit": "ca27730680a3ea848d22bfcadcd290d5efca2c71",
-      "workflow_run_id": 35753183278,
-      "rom_used_bytes": 26959684,
-      "rom_free_bytes": 6594748,
+      "commit": "4501e42c2b82287d3928faa01eef14878cdf9040",
+      "workflow_run_id": 35753889122,
+      "rom_used_bytes": 26959676,
+      "rom_free_bytes": 6594756,
       "rom_used_percent": 80.35,
       "ewram_used_bytes": 226700,
       "ewram_free_bytes": 35444,
@@ -172,7 +172,12 @@
       "iwram_free_bytes": 4140,
       "iwram_used_percent": 87.37,
       "built_rom_file_bytes": 33554432,
-      "result": "success"
+      "result": "success",
+      "compile_time_layout_guards": {
+        "pokemon_substruct0_bytes": 12,
+        "pokemon_substruct3_bytes": 12,
+        "box_pokemon_bytes": 80
+      }
     },
     "policy": [
       "the-32-mib-rom-file-is-a-container-limit-not-used-space",
