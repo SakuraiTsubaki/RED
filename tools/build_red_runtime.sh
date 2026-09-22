@@ -15,8 +15,8 @@ git -C "$WORK" checkout --detach FETCH_HEAD
 
 for patch in "$ROOT"/patches/pokeemerald-expansion/*.patch; do
   echo "Checking $(basename "$patch")"
-  git -C "$WORK" apply --recount --check "$patch"
-  git -C "$WORK" apply --recount "$patch"
+  git -C "$WORK" apply --check "$patch"
+  git -C "$WORK" apply "$patch"
 done
 
 python3 "$ROOT/tools/audit_upstream_capacity.py" "$WORK"
