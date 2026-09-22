@@ -1,8 +1,23 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "target": "RED",
+  "platform": "Nintendo Game Boy",
+  "cpu": "Sharp SM83",
   "policy_target_generation": 10,
   "generation_field_bits": 8,
+  "runtime_scope": "original-game-boy-engine-expansion",
+  "excluded_runtime_scope": [
+    "gba-remake",
+    "generation-iii-derived-runtime"
+  ],
+  "master_reference": {
+    "primary_release": "jp-red-rev0",
+    "revisions": [
+      "jp-red-rev0",
+      "jp-red-reva"
+    ],
+    "rule": "japanese-original-is-master-reference"
+  },
   "canonical_ids": {
     "species": {
       "bits": 16,
@@ -50,140 +65,92 @@
       "invalid": 65535
     }
   },
-  "resource_keys": {
-    "maps": {
-      "bits": 32,
-      "invalid": 4294967295
-    },
-    "scripts": {
-      "bits": 32,
-      "invalid": 4294967295
-    },
-    "text": {
-      "bits": 32,
-      "invalid": 4294967295
-    },
-    "graphics": {
-      "bits": 32,
-      "invalid": 4294967295
-    },
-    "audio": {
-      "bits": 32,
-      "invalid": 4294967295
-    }
+  "cartridge_target": {
+    "mapper": "MBC5+RAM+BATTERY",
+    "cartridge_type_code": "0x1B",
+    "rom_bytes": 8388608,
+    "rom_banks_16k": 512,
+    "rom_bank_number_bits_required": 9,
+    "runtime_rom_bank_storage_bits": 16,
+    "header_rom_size_code": "0x08",
+    "sram_bytes": 131072,
+    "sram_banks_8k": 16,
+    "header_ram_size_code": "0x04",
+    "preserve_sgb_flag": true,
+    "boot_certified": false,
+    "boot_gate": "patch-and-verify-mbc5-9th-rom-bank-bit-path"
   },
-  "engine": {
-    "upstream": "rh-hideout/pokeemerald-expansion",
-    "verified_ref": "75b806a3ab57a81ff1eb6179288981f0b3cc3050",
-    "ref_policy": "advance-only-after-red-validation"
+  "expanded_pointer_contract": {
+    "legacy_far_pointer_bytes": 3,
+    "expanded_far_pointer_bytes": 4,
+    "bank_bits": 16,
+    "address_bits": 16
   },
-  "invariants": [
-    "generation-is-metadata-not-an-array-bound",
-    "species-and-forms-have-separate-canonical-identities",
-    "canonical-ids-never-depend-on-localized-text",
-    "engine-enum-values-are-adapter-values-not-project-identities",
-    "unknown-future-content-is-not-fabricated"
-  ],
-  "audited_pinned_source": {
-    "ref": "75b806a3ab57a81ff1eb6179288981f0b3cc3050",
-    "observed_last_species_form_id": 1572,
-    "observed_last_item_id": 873,
-    "observed_last_gen9_ordinary_move_id": 847,
-    "observed_last_ability_id": 319,
-    "persistent_layout": {
-      "species_bits": 11,
-      "held_item_bits": 10,
-      "move_bits": 11,
-      "tera_type_bits": 5,
-      "pokeball_bits": 6,
-      "pokemon_substruct0_bytes": 12,
-      "language_bits": 3,
-      "met_game_bits": 4,
-      "pokemon_substruct3_bytes": 12
-    }
-  },
-  "red_runtime_persistence_target": {
+  "runtime_id_targets": {
     "species_bits": 16,
-    "held_item_bits": 16,
-    "move_bits_minimum_for_phase0": 11,
-    "canonical_move_bits": 16,
-    "tera_type_bits_minimum": 5,
-    "pokeball_bits_minimum": 6,
-    "pokemon_substruct0_bytes": 12,
-    "require_no_substruct0_growth": true,
-    "patch": "patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch",
-    "language_bits": 4,
-    "met_game_bits": 5,
-    "pokemon_substruct3_bytes": 12,
-    "require_no_substruct3_growth": true,
-    "patches": [
-      "patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch",
-      "patches/pokeemerald-expansion/0003-red-expand-language-origin-game-ids.patch"
-    ]
+    "move_bits": 16,
+    "item_bits": 16,
+    "implemented": false,
+    "freeze_gate": "complete-read-write-callsite-census-before-layout-freeze"
+  },
+  "save_target": {
+    "mapper": "MBC5",
+    "bytes": 131072,
+    "banks_8k": 16,
+    "schema_versioned": true,
+    "legacy_japanese_import": true,
+    "legacy_international_import": true,
+    "in_place_reinterpretation_forbidden": true
   },
   "source_evidence": {
-    "required_before_target_runtime_freeze": true,
     "rom_baselines": 7,
     "save_baselines": 7,
-    "source_adapters": [
-      "japanese-red",
-      "international-red"
-    ],
     "japanese": {
       "observed_rom_bytes": 524288,
       "observed_rom_banks_16k": 32,
       "cartridge_controller": "MBC1",
+      "cartridge_type_code": "0x03",
       "declared_sram_bytes": 32768,
-      "main_data_start": 9624,
-      "checksum_offset": 13716
+      "revisions": [
+        0,
+        1
+      ],
+      "save_checksum_offset": "0x3594"
     },
-    "international": {
+    "english_international": {
       "observed_rom_bytes": 1048576,
       "observed_rom_banks_16k": 64,
-      "cartridge_controllers": [
-        "MBC3",
-        "MBC5"
-      ],
+      "cartridge_controller": "MBC3",
+      "cartridge_type_code": "0x13",
       "declared_sram_bytes": 32768,
-      "main_data_start": 9624,
-      "checksum_offset": 13603
+      "save_checksum_offset": "0x3523"
     },
-    "rules": [
-      "strip-bytes-beyond-declared-cartridge-sram-before-save-parse",
-      "never-assume-one-mbc-or-one-rom-bank-count-for-all-red-releases",
-      "never-reinterpret-japanese-save-layout-as-international",
-      "parse-source-to-canonical-before-target-serialization"
-    ]
+    "european_localized": {
+      "languages": [
+        "German",
+        "French",
+        "Italian",
+        "Spanish"
+      ],
+      "observed_rom_bytes": 1048576,
+      "observed_rom_banks_16k": 64,
+      "cartridge_controller": "MBC5",
+      "cartridge_type_code": "0x1B",
+      "declared_sram_bytes": 32768
+    }
   },
-  "gba_runtime_budget": {
-    "addressable_rom_bytes": 33554432,
-    "ewram_bytes": 262144,
-    "iwram_bytes": 32768,
-    "verified_build": {
-      "commit": "4501e42c2b82287d3928faa01eef14878cdf9040",
-      "workflow_run_id": 35753889122,
-      "rom_used_bytes": 26959676,
-      "rom_free_bytes": 6594756,
-      "rom_used_percent": 80.35,
-      "ewram_used_bytes": 226700,
-      "ewram_free_bytes": 35444,
-      "ewram_used_percent": 86.48,
-      "iwram_used_bytes": 28628,
-      "iwram_free_bytes": 4140,
-      "iwram_used_percent": 87.37,
-      "built_rom_file_bytes": 33554432,
-      "result": "success",
-      "compile_time_layout_guards": {
-        "pokemon_substruct0_bytes": 12,
-        "pokemon_substruct3_bytes": 12,
-        "box_pokemon_bytes": 80
-      }
-    },
-    "policy": [
-      "the-32-mib-rom-file-is-a-container-limit-not-used-space",
-      "track-linker-region-usage-on-every-runtime-build",
-      "do-not-claim-generation-10-data-fits-until-verified-data-is-built",
-      "rom-binaries-remain-ephemeral-and-are-not-committed-or-uploaded-as-artifacts"
-    ]
-  }
+  "implementation_gates": [
+    "mbc5-high-bank-register-3000-3fff-verified",
+    "banked-call-and-far-pointer-census-complete",
+    "species-move-item-id-read-write-census-complete",
+    "expanded-save-roundtrip-tested",
+    "boot-tested"
+  ],
+  "invariants": [
+    "generation-is-metadata-not-an-array-bound",
+    "japanese-original-remains-master-reference",
+    "canonical-ids-never-depend-on-localized-text",
+    "unknown-future-content-is-not-fabricated",
+    "gba-remake-is-a-separate-project"
+  ]
 }

@@ -1,11 +1,20 @@
-profiles:
-  expanded:
-    upstream: rh-hideout/pokeemerald-expansion
-    ref: 75b806a3ab57a81ff1eb6179288981f0b3cc3050
-    purpose: RED remake base with modern species/form/move/ability/item infrastructure
-    pin_policy: advance-only-after-red-validation
-    source_of_verified_pin: SakuraiTsubaki/EMERALD
-    future_generation_policy:
-      target_generation: 10
-      hard_code_final_generation: false
-      fabricate_unreleased_data: false
+schema_version: 2
+target: RED
+runtime:
+  platform: Nintendo Game Boy
+  cpu: Sharp SM83
+  source_repository: SakuraiTsubaki/PocketMonsters-Aka-Disassembly
+  master_reference:
+    - jp-red-rev0
+    - jp-red-reva
+  cartridge_target:
+    mapper: MBC5+RAM+BATTERY
+    cartridge_type_code: 0x1B
+    rom_bytes: 8388608
+    rom_banks_16k: 512
+    sram_bytes: 131072
+    sram_banks_8k: 16
+  sgb: preserve
+scope:
+  gba_remake: separate-project
+  rom_binaries_committed: false

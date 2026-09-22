@@ -1,44 +1,34 @@
 # RED
 
-**ポケットモンスター 赤** (Generation I)를 **Game Boy Advance / Generation III 계열 기반의 현대화 리메이크**로 재구축하는 저장소입니다.
+**ポケットモンスター 赤** 원작 Game Boy 엔진을 직접 확장하는 프로젝트입니다.
 
-## 현재 정본 방향
+## 정본 방향
 
-- 일본판 원작과 모든 확인된 revision을 원전으로 전수조사합니다.
-- 원작의 지역, 스토리, 이벤트, NPC, 버전 고유 요소는 보존합니다.
-- 포켓몬/타입/특성/기술/진화/폼/아이템/전투·육성 규칙은 현재 검증 가능한 최신 공식 기준으로 현대화합니다.
-- 최종 실행 대상은 **GBA**입니다.
-- GB/GBC mapper, SRAM, 원본 주소 구조는 원본 분석 자료로 보존하지만 최종 런타임 엔진으로 사용하지 않습니다.
-- 미출시·미검증 세대 콘텐츠는 추측하지 않습니다.
+- 일본판 `ポケットモンスター 赤` Rev 0 / Rev A ROM이 Master Reference입니다.
+- 공식 현지화 Red는 mapper·용량·현지화 구현 비교 근거입니다.
+- 최종 실행 대상은 **Game Boy / Super Game Boy 호환 GB ROM**입니다.
+- GBA / Generation III 리메이크는 별도 작업입니다.
+- ROM/SAV 바이너리는 GitHub에 커밋하지 않습니다.
 
-## 기반
+## 10세대 대비
 
-- 원본 조사: `SakuraiTsubaki/PocketMonsters-Aka-Disassembly`
-- 공통 현대화 연구: `SakuraiTsubaki/EMERALD`
-- 현대 코어 기준: `rh-hideout/pokeemerald-expansion@75b806a3ab57a81ff1eb6179288981f0b3cc3050`
+- 목표 mapper: **MBC5+RAM+BATTERY**
+- 목표 ROM: **8 MiB / 512 × 16 KiB banks**
+- 목표 SRAM: **128 KiB / 16 × 8 KiB banks**
+- ROM bank ID 저장: 16-bit (하드웨어에 필요한 범위는 9-bit)
+- species / move / item 확장 ID: 16-bit target
+- 원본 8-bit 구조와 세이브는 source schema로 보존하고 확장 포맷은 versioned schema로 관리합니다.
 
-## 문서
+실측 결과 일본 赤는 512 KiB MBC1, 영어 Red는 1 MiB MBC3, 독/불/이/스 Red는 1 MiB MBC5입니다.
 
-- `PROJECT.md` — 현재 프로젝트 방향의 정본
-- `config/remake.json` — 기계 판독 가능한 작품/엔진/원본 기준
-- `docs/REMAKE_POLICY.md` — 원작 보존과 최신화 정책
+## 현재 구현
 
-저장소에 남아 있는 이전 확장 설계 문서와 도구는 삭제하지 않습니다. 원본 구조·세이브·ID·용량 연구 자료로 보존하며, GBA 리메이크에 필요한 내용만 새 런타임 설계로 옮깁니다.
+- `research/rom-baselines.csv`, `research/save-baselines.csv`
+- `research/mbc-register-writes.csv`
+- `tools/audit_gb_banking.py`
+- `tools/prepare_gb_expansion_image.py`
+- `src/source_formats/gen1_red.py`
 
-ROM 바이너리는 GitHub에 커밋하지 않습니다.
+`prepare_gb_expansion_image.py`는 cartridge envelope 준비 단계입니다. MBC5의 9번째 ROM-bank bit 경로가 실제 코드에 패치·검증되기 전에는 결과를 boot-certified ROM으로 취급하지 않습니다.
 
-## ROM/SAV 기반 확장
-
-확장은 추정치가 아니라 실제 RED 입력을 먼저 검사한 뒤 진행합니다.
-
-- ROM 기준선: `research/rom-baselines.csv`
-- SAV 기준선: `research/save-baselines.csv`
-- JP / International 세이브 구조: `manifests/save-layouts.yml`
-- ROM/SAV → canonical 어댑터: `src/source_formats/gen1_red.py`
-- 확장 판단 보고서: `analysis/rom-save-expansion-audit.md`
-- target 엔진 첫 용량 패치: `patches/pokeemerald-expansion/0001-red-expand-persistent-species-item-ids.patch`
-
-실측 결과 일본 赤는 512 KiB/MBC1, 국제판은 1 MiB/MBC3 또는 MBC5이며,
-SAV도 일본판과 국제판의 레이아웃이 다릅니다. 따라서 원본 주소나 세이브
-오프셋을 하나로 가정하지 않고 각 source adapter로 canonical 데이터에
-변환한 뒤 GBA 런타임에 넣습니다.
+원본 조사 저장소: `SakuraiTsubaki/PocketMonsters-Aka-Disassembly`

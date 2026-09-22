@@ -1,61 +1,20 @@
-# Persistent Pokémon layout — RED target
+# Persistent Pokémon layout — expanded GB RED
 
-The pinned expansion engine uses four encrypted 12-byte Pokémon substructures.
-RED keeps that size for the first capacity expansion.
+원본 Gen I RED의 persistent Pokémon 데이터는 여러 8-bit 식별자에 의존한다. 10세대 대비 RED는 species/move/item의 runtime ID를 16-bit로 확장하는 것을 목표로 한다.
 
-## Substruct 0 target
+## 원칙
 
-The existing layout spends 11 spare bits across three `unused` fields.
-Reordering the same 96 bits allows both high-pressure identifiers to become
-16-bit without growing a boxed Pokémon.
+1. 일본판과 국제판 save layout은 서로 다른 source schema다.
+2. 원본 save를 새 구조로 in-place reinterpret하지 않는다.
+3. 확장 SRAM 목표는 MBC5 128 KiB다.
+4. 정확한 per-mon byte layout은 species/move/item의 모든 RAM/SRAM read/write callsite 전수조사 후 고정한다.
+5. schema version과 migration을 둔다.
 
-Target logical layout:
+## 현재 확정된 폭
 
-```c
-struct PokemonSubstruct0
-{
-    u16 species;          // RED target: 16-bit engine species/form ID
-    u16 heldItem;         // RED target: 16-bit item ID
+- species ID: 16 bit target
+- move ID: 16 bit target
+- item ID: 16 bit target
+- expanded ROM bank storage: 16 bit (실제 하드웨어 범위 9 bit)
 
-    u32 experience:21;
-    u32 teraType:5;
-    u32 pokeball:6;
-
-    u8 nickname11;
-    u8 nickname12;
-    u8 ppBonuses;
-    u8 friendship;
-};
-```
-
-Bit total: 96 bits = 12 bytes.
-
-This is a **RED layout contract**, not yet a claim that the upstream source has
-been patched and compiled. The executable import must enforce
-`sizeof(struct PokemonSubstruct0) == 12`.
-
-## Compatibility
-
-RED starts this layout before its save format is frozen. Therefore RED should
-not create a legacy public save format using the upstream 11/10-bit packing.
-
-If an upstream-format save importer is added later, it must:
-
-1. decrypt the old substructures;
-2. read the legacy 11-bit species and 10-bit item values;
-3. map them through RED's canonical registry;
-4. repack them into the RED layout;
-5. recompute the Pokémon checksum;
-6. write the RED save schema version.
-
-Do not reinterpret encrypted bytes in place.
-
-## Move storage
-
-The pinned engine stores four move IDs in 11-bit fields (max 2047). RED's
-canonical move IDs are still 16-bit, but runtime persistence may keep 11 bits
-while the verified registry remains safely below that ceiling.
-
-This is intentionally different from species/items: current move usage has much
-more headroom. Capacity is checked by tooling rather than guessed from a future
-generation.
+GBA의 BoxPokemon/substruct layout은 이 GB save 설계의 근거로 사용하지 않는다.

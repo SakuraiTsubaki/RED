@@ -1,100 +1,36 @@
-# Generation 10-ready expansion foundation
+# Generation 10-ready expansion — Game Boy RED
 
-RED must not reproduce the original Generation I engine's narrow data limits.
-The remake layer is built on a modern Generation III-derived expansion engine and
-keeps RED-specific story/content as an overlay.
+RED의 확장 대상은 GBA 엔진이 아니라 **원작 Game Boy 런타임**이다.
 
-## Engine baseline
+## 실측 기준
 
-- upstream: `rh-hideout/pokeemerald-expansion`
-- verified reference: `75b806a3ab57a81ff1eb6179288981f0b3cc3050`
-- origin of the pin: the already verified expanded profile in `SakuraiTsubaki/EMERALD`
-- RED may advance the pin only after RED's validation suite passes.
+- 일본 赤 Rev 0 / Rev A: 512 KiB, 32 ROM banks, MBC1, 32 KiB SRAM
+- 영어 Red: 1 MiB, 64 ROM banks, MBC3, 32 KiB SRAM
+- 독/불/이/스 Red: 1 MiB, 64 ROM banks, MBC5, 32 KiB SRAM
 
-This pin is a reproducible starting point, not a claim that it already contains
-Generation 10 content.
+공식 현지화 Red에 이미 MBC5 변형이 존재하므로 확장 RED는 MBC5를 목표 mapper로 사용한다.
 
-## Future-proofing rules
+## Cartridge envelope
 
-1. Canonical project IDs are not stored in 8-bit fields.
-2. Species and forms are separate identities. A form never consumes a new base
-   species identity merely because the runtime engine represents it that way.
-3. Moves, abilities, items, types and evolution methods use registries rather
-   than assumptions about a generation's final count.
-4. Generation is metadata, not an array bound. Core code must not assume that
-   Generation 10 is the final generation.
-5. Save-facing extended data is schema-versioned and migratable.
-6. Text uses stable keys; Japanese source text and localized display text are
-   not used as identity.
-7. Engine IDs are adapters. RED's canonical IDs remain stable even if an
-   upstream engine changes its enum order.
-8. Unknown future Generation 10 records are never fabricated. Capacity is
-   reserved now; verified data is added later.
+- ROM: 8 MiB = 512 × 16 KiB banks
+- SRAM: 128 KiB = 16 × 8 KiB banks
+- 512 ROM banks에는 최소 9-bit bank number가 필요하다.
+- 새 banked pointer 계약은 16-bit bank + 16-bit address의 4-byte 표현을 목표로 한다.
 
-## Canonical ID widths
+## ID target
 
-The project-level registry uses 16-bit unsigned IDs for:
+species / move / item은 16-bit runtime target으로 둔다. forms/abilities/types/evolution methods는 16-bit canonical IDs를 사용한다.
 
-- species
-- forms
-- moves
-- abilities
-- items
-- types
-- evolution methods
-- encounter tables
-- trainer classes
+정확한 Gen I 구조체 byte layout은 모든 RAM/SRAM read/write callsite 전수조사 전에 고정하지 않는다.
 
-`0x0000` is reserved for NONE where the domain needs it.
-`0xFFFF` is reserved as INVALID/UNMAPPED and must never become a real entry.
+## Mapper gate
 
-Maps, scripts, text resources and other potentially high-cardinality assets use
-32-bit project keys. Runtime adapters may use smaller local indices only when
-the conversion is explicit and validated.
+`tools/prepare_gb_expansion_image.py`는 8 MiB MBC5/128 KiB SRAM header와 container를 준비한다. 그러나 MBC5의 9번째 ROM-bank bit register인 $3000-$3FFF 경로가 실제 bank-switch 코드에 구현·검증되기 전까지 boot-certified가 아니다.
 
-## Forms
+## Save gate
 
-Every form record must carry:
+기존 일본/국제판 32 KiB save는 import schema다. 확장 런타임은 MBC5 128 KiB SRAM과 versioned schema를 사용한다.
 
-- canonical form ID
-- base species ID
-- stable symbolic key
-- form kind (permanent, regional, battle-only, cosmetic, gender, parameter)
-- availability rules
-- evolution relation where applicable
-- engine symbol / adapter mapping
+## GBA
 
-This prevents regional forms, battle forms, gender forms, parameter forms and
-future mechanics from being collapsed into one overloaded species counter.
-
-## Saves
-
-RED must preserve the upstream engine's proven save infrastructure while adding
-a versioned RED extension contract for project-specific state.
-
-Rules:
-
-- every RED extension has a schema version;
-- migrations are forward-only and deterministic;
-- canonical IDs are stored, never localized names;
-- removed/unknown records remain recoverable as unmapped IDs rather than being
-  silently reinterpreted;
-- a save migration test is required before an engine pin is advanced.
-
-The exact binary placement is intentionally not frozen until the RED engine
-source is imported. Freezing offsets before the executable base exists would
-create fake compatibility.
-
-## Generation 10 integration gate
-
-Generation 10 data may be merged only when all of the following are true:
-
-- the source is identified and recorded;
-- stable project registry IDs are assigned;
-- engine symbols or adapter entries exist;
-- save migration remains valid;
-- Pokédex, party, battle, evolution, learnset, item, ability and form tests pass;
-- graphics/audio/text resources are accounted for;
-- the RED story layer still builds without changing canonical IDs.
-
-The same gate applies to Generation 11+.
+GBA 리메이크는 별도 작업이며 RED GB 용량 검증에 GBA ROM/EWRAM/IWRAM 값을 사용하지 않는다.

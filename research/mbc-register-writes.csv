@@ -1,0 +1,8 @@
+id,filename,bytes,rom_banks_16k,cartridge_type_code,raw_EA_0000,raw_EA_2000,raw_EA_3000,raw_EA_4000,raw_EA_6000
+jp-red-rev0,"Pocket Monsters - Aka (Japan) (SGB Enhanced).gb",524288,32,0x03,29,89,0,19,25
+jp-red-reva,"Pocket Monsters - Aka (Japan) (Rev A) (SGB Enhanced).gb",524288,32,0x03,29,89,0,19,25
+en-red-int,"Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb",1048576,64,0x13,30,91,0,19,25
+de-red,"Pokemon - Rote Edition (Germany) (SGB Enhanced).gb",1048576,64,0x1B,30,91,0,19,25
+fr-red,"Pokemon - Version Rouge (France) (SGB Enhanced).gb",1048576,64,0x1B,30,91,0,19,25
+it-red,"Pokemon - Versione Rossa (Italy) (SGB Enhanced).gb",1048576,64,0x1B,30,91,0,19,25
+es-red,"Pokemon - Edicion Roja (Spain) (SGB Enhanced).gb",1048576,64,0x1B,30,91,0,19,25

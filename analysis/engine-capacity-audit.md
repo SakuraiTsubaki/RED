@@ -1,52 +1,27 @@
-# Engine capacity audit — pinned expanded base
+# RED Game Boy capacity audit
 
-Audited source:
+## Supplied ROM evidence
 
-- `rh-hideout/pokeemerald-expansion`
-- ref `75b806a3ab57a81ff1eb6179288981f0b3cc3050`
+| Family | ROM | Banks | Mapper | SRAM |
+| --- | ---: | ---: | --- | ---: |
+| Japanese Red Rev 0 / Rev A | 512 KiB | 32 | MBC1+RAM+BATTERY | 32 KiB |
+| English Red | 1 MiB | 64 | MBC3+RAM+BATTERY | 32 KiB |
+| German/French/Italian/Spanish Red | 1 MiB | 64 | MBC5+RAM+BATTERY | 32 KiB |
 
-## Persistent Pokémon bottlenecks
+독/불/이/스 공식 Red가 MBC5를 사용한다.
 
-The pinned `include/pokemon.h` stores these fields in `PokemonSubstruct0`:
+## Target envelope
 
-| Field | Width | Encodable values | Current pressure |
-| --- | ---: | ---: | --- |
-| species/form engine ID | 11 bits | 0..2047 | high |
-| Tera type | 5 bits | 0..31 | low |
-| held item | 10 bits | 0..1023 | high |
-| Poké Ball | 6 bits | 0..63 | moderate |
+- 8 MiB ROM
+- 512 ROM banks
+- 128 KiB external SRAM
+- 16 SRAM banks
+- ROM bank 9th bit 지원 필요
 
-`PokemonSubstruct1` stores each move in 11 bits (0..2047).
+Reference: https://gbdev.io/pandocs/MBC5.html
 
-The pinned constants currently reach approximately:
+## Raw literal audit
 
-- species/form engine entries: 1572 before the custom range;
-- items: 873;
-- ordinary Generation 9 moves: 847 before Z/Max move ranges;
-- abilities: 319.
+`research/mbc-register-writes.csv`는 ROM 전체의 raw `EA nn nn` byte pattern을 세는 휴리스틱 자료이며 code/data-aware disassembly를 대체하지 않는다.
 
-The immediate Generation-10 risk is therefore **species/form and item persistence**,
-not ordinary move persistence.
-
-## RED phase-zero decision
-
-RED will not ship with the 11-bit species / 10-bit held-item persistent layout.
-
-The first executable-base patch must expand:
-
-- persisted species/form engine ID to 16 bits;
-- persisted held item ID to 16 bits;
-
-while retaining the 12-byte size of `PokemonSubstruct0`.
-
-Move IDs remain canonically 16-bit in RED registries. The pinned runtime's
-11-bit move storage is retained initially because it has substantial headroom;
-the audit gate must be rerun whenever the move registry grows. If the runtime
-count approaches its ceiling, move persistence is widened before new data is
-accepted.
-
-## Why this happens before content
-
-Changing the encrypted boxed-Pokémon layout after players already have RED saves
-would require a migration of every stored Pokémon. Doing it before RED content
-and public save compatibility are frozen avoids that unnecessary legacy burden.
+공급된 7 ROM에서 $3000 literal store pattern은 모두 0개다. 현재 32/64-bank ROM에는 9번째 ROM-bank bit가 필요 없지만 8 MiB target에서는 이 경로를 새로 구현하고 boot test해야 한다.

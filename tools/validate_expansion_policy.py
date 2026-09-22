@@ -4,72 +4,48 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "config" / "expansion-capacity.json"
-
-REQUIRED_16 = {
-    "species",
-    "forms",
-    "moves",
-    "abilities",
-    "items",
-    "types",
-    "evolution_methods",
-    "encounter_tables",
-    "trainer_classes",
-}
-REQUIRED_32 = {"maps", "scripts", "text", "graphics", "audio"}
+REQUIRED_16 = {"species","forms","moves","abilities","items","types","evolution_methods","encounter_tables","trainer_classes"}
 
 def main() -> None:
     data = json.loads(CONFIG.read_text(encoding="utf-8"))
-
+    assert data["platform"] == "Nintendo Game Boy"
+    assert data["cpu"] == "Sharp SM83"
+    assert data["runtime_scope"] == "original-game-boy-engine-expansion"
+    assert "gba-remake" in data["excluded_runtime_scope"]
     assert data["policy_target_generation"] >= 10
-    assert data["generation_field_bits"] >= 8
 
-    canonical = data["canonical_ids"]
-    assert REQUIRED_16 <= set(canonical)
     for name in REQUIRED_16:
-        spec = canonical[name]
-        assert spec["bits"] >= 16, name
-        assert spec["invalid"] == (1 << spec["bits"]) - 1, name
-        assert spec["none"] != spec["invalid"], name
+        spec = data["canonical_ids"][name]
+        assert spec["bits"] >= 16
+        assert spec["invalid"] == (1 << spec["bits"]) - 1
 
-    resources = data["resource_keys"]
-    assert REQUIRED_32 <= set(resources)
-    for name in REQUIRED_32:
-        spec = resources[name]
-        assert spec["bits"] >= 32, name
-        assert spec["invalid"] == (1 << spec["bits"]) - 1, name
+    cart = data["cartridge_target"]
+    assert cart["mapper"] == "MBC5+RAM+BATTERY"
+    assert cart["rom_bytes"] == 8 * 1024 * 1024
+    assert cart["rom_banks_16k"] == 512
+    assert cart["rom_bank_number_bits_required"] >= 9
+    assert cart["runtime_rom_bank_storage_bits"] >= 16
+    assert cart["sram_bytes"] == 128 * 1024
+    assert cart["sram_banks_8k"] == 16
+    assert cart["boot_certified"] is False
 
-    invariants = set(data["invariants"])
-    assert "generation-is-metadata-not-an-array-bound" in invariants
-    assert "species-and-forms-have-separate-canonical-identities" in invariants
-    assert "unknown-future-content-is-not-fabricated" in invariants
+    ptr = data["expanded_pointer_contract"]
+    assert ptr["expanded_far_pointer_bytes"] >= 4
+    assert ptr["bank_bits"] >= 16
 
-    engine = data["engine"]
-    assert engine["upstream"] == "rh-hideout/pokeemerald-expansion"
-    assert len(engine["verified_ref"]) == 40
-
-    runtime = data["red_runtime_persistence_target"]
+    runtime = data["runtime_id_targets"]
     assert runtime["species_bits"] >= 16
-    assert runtime["held_item_bits"] >= 16
-    assert runtime["canonical_move_bits"] >= 16
-    assert runtime["language_bits"] >= 4
-    assert runtime["met_game_bits"] >= 5
-    assert runtime["pokemon_substruct0_bytes"] == 12
-    assert runtime["pokemon_substruct3_bytes"] == 12
-    assert runtime["require_no_substruct0_growth"] is True
-    assert runtime["require_no_substruct3_growth"] is True
+    assert runtime["move_bits"] >= 16
+    assert runtime["item_bits"] >= 16
 
-    budget = data["gba_runtime_budget"]
-    assert budget["addressable_rom_bytes"] == 32 * 1024 * 1024
-    assert budget["ewram_bytes"] == 256 * 1024
-    assert budget["iwram_bytes"] == 32 * 1024
-    verified = budget["verified_build"]
-    assert verified["result"] == "success"
-    assert verified["rom_used_bytes"] <= budget["addressable_rom_bytes"]
-    assert verified["ewram_used_bytes"] <= budget["ewram_bytes"]
-    assert verified["iwram_used_bytes"] <= budget["iwram_bytes"]
+    save = data["save_target"]
+    assert save["bytes"] == 128 * 1024
+    assert save["banks_8k"] == 16
+    assert save["schema_versioned"] is True
 
-    print("RED expansion policy: OK")
+    assert "japanese-original-remains-master-reference" in data["invariants"]
+    assert "gba-remake-is-a-separate-project" in data["invariants"]
+    print("RED Game Boy expansion policy: OK")
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile a RED source bundle into canonical, modern-runtime-ready content tables.
+"""Compile a RED source bundle into canonical, expanded-Game-Boy-runtime-ready content tables.
 
 This compiler does not overwrite modern battle/species parameters. It normalizes
 Generation I internal species IDs and map IDs so later serializers can target
@@ -186,9 +186,9 @@ def compile_profile(profile_dir: Path, map_registry: Path, out: Path) -> dict[st
         "schema": 1,
         "source_profile": manifest["profile"],
         "source_rom_sha256": manifest["source"]["sha256"],
-        "native_save_profile": "JPN-RED-GBA",
+        "native_save_profile": "JPN-RED-GB-EXPANDED",
         "species_identity": "National Dex intermediate; engine enum resolution is a later serializer stage",
-        "modernization_rule": "source evolutions/learnsets are reference tables; modern runtime parameters remain authoritative",
+        "modernization_rule": "source evolutions/learnsets are reference tables; expanded RED runtime serializers must preserve source provenance",
         "outputs": outputs,
     }
     (out / "manifest.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

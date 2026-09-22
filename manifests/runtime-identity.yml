@@ -1,36 +1,16 @@
-schema_version: 1
-project: RED
-runtime_mode:
-  expansion_game_version: FIRERED
-  map_version: firered
-  reason: supported Kanto GBA runtime/assets while RED source semantics remain authoritative
-
-gba_header:
-  title: "PM RED REMAK"
-  game_code: "RDXJ"
-  maker_code: "00"
-  revision: 0
-  language: Japanese
-
-identity_status:
-  game_code_kind: project-private
-  official_product_code: false
-  official_nintendo_maker_code_claimed: false
-  note: "RDXJ/00 are project identifiers for development builds, not official Nintendo/Game Freak identifiers."
-
-gf_public_header:
-  game_name: "pocket monsters red remake"
-  compatibility_version: FIRERED
-  language: Japanese
-
-source_identity:
-  default: jp-red-reva
-  preserved_profiles:
-    - jp-red-rev0
-    - jp-red-reva
-  native_save_profile: JPN-RED-GBA
-
-rules:
-  do_not_change_engine_compatibility_version_to_fake_red_enum: true
-  do_not_reuse_official_bpre_header: true
-  do_not_embed_source_rom_binary: true
+schema_version: 2
+target: RED
+identity:
+  title: Pocket Monsters Aka / Pokemon Red
+  platform: Game Boy
+  cpu: Sharp SM83
+  runtime_family: generation-i-expanded
+  master_language: Japanese
+  sgb_enhanced: true
+cartridge:
+  target_mapper: MBC5+RAM+BATTERY
+  target_rom_bytes: 8388608
+  target_sram_bytes: 131072
+verification:
+  boot_certified: false
+  reason: MBC5 9th ROM-bank bit path is not patched and boot-verified yet

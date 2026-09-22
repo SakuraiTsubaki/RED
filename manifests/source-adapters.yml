@@ -1,6 +1,6 @@
-schema_version: 1
+schema_version: 2
 source_family: pokemon-red-generation-i
-principle: parse-source-to-canonical-then-serialize-target
+principle: parse-source-to-canonical-then-run-on-expanded-gb
 
 adapters:
   japanese-red:
@@ -19,7 +19,6 @@ adapters:
       main_data_start: 0x2598
       observed_checksum_offset: 0x3594
       layout_family: japanese
-      rule: do-not-reinterpret-as-international
 
   international-red:
     rom:
@@ -40,6 +39,8 @@ adapters:
       rule: strip-non-cartridge-footer-before-parse
 
 target:
-  runtime_family: generation-iii-derived-expanded
-  source_rom_banking_is_provenance_not-runtime-capacity
-  source_save_layout_is-import-schema-not-target-save-layout
+  runtime_family: generation-i-expanded-game-boy
+  mapper: MBC5
+  rom_bytes: 8388608
+  sram_bytes: 131072
+  source_layouts_remain_import_schemas: true

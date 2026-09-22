@@ -1,29 +1,15 @@
-# RED target-engine patches
+# RED patches
 
-These patches belong to **RED**. They are applied to the pinned executable base
-only after the source ROM/save evidence layer has been verified.
+이 디렉터리는 **Game Boy RED 원작 엔진** 패치만 둡니다.
 
-Current base:
+`pokeemerald-expansion`용 GBA 패치는 현재 트리에서 제거합니다. 과거 커밋 기록은 남기므로 별도 GBA 프로젝트로 이전할 수 있습니다.
 
-- `rh-hideout/pokeemerald-expansion`
-- `75b806a3ab57a81ff1eb6179288981f0b3cc3050`
+GB patch 순서:
 
-## 0001 — persistent species/item width
+1. MBC5 bank abstraction
+2. 9-bit ROM bank access / 16-bit bank storage
+3. expanded far pointers
+4. species/move/item 16-bit paths
+5. 128 KiB versioned save
 
-`0001-red-expand-persistent-species-item-ids.patch`
-
-The supplied Generation I ROM/SAV images show that RED needs explicit
-source-format adapters rather than in-place save mutation. Because RED therefore
-has a clean target-save boundary, the target engine can spend existing padding
-before compatibility is frozen.
-
-The patch widens:
-
-- species/form engine ID: 11 -> 16 bits
-- held item ID: 10 -> 16 bits
-
-It keeps `PokemonSubstruct0` at 12 bytes by repacking fields that already fit in
-the same 96-bit payload. It also adds compile-time capacity gates.
-
-The move field remains 11 bits for phase zero, with an explicit compile-time
-ceiling. RED's canonical move registry is still 16-bit.
+ROM 바이너리는 커밋하지 않습니다.

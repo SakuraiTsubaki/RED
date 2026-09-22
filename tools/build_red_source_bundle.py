@@ -126,8 +126,8 @@ def build_profile(profile_id: str, spec: dict[str, str], census_dir: Path, rom_d
             "rom_verified_this_run": rom_verified,
         },
         "tables": tables,
-        "runtime_target": "Generation III-derived modern remake core",
-        "native_save_profile": "JPN-RED-GBA",
+        "runtime_target": "Generation I expanded Game Boy runtime",
+        "native_save_profile": "JPN-RED-GB-EXPANDED",
         "rom_binary_included": False,
     }
     data = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode()
