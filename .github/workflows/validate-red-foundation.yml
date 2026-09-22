@@ -18,3 +18,19 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Expansion policy
         run: python tools/validate_expansion_policy.py
+
+  runtime-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GBA build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libpng-dev \
+            python3
+      - name: Apply RED patches and build Kanto runtime
+        run: bash tools/build_red_runtime.sh
