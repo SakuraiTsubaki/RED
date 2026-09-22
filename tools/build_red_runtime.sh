@@ -21,7 +21,10 @@ done
 
 python3 "$ROOT/tools/audit_upstream_capacity.py" "$WORK"
 
-make -C "$WORK" firered -j"$(nproc)" -O \\\n  TITLE="PM RED REMAK" \\\n  GAME_CODE=RDXJ \\\n  MAKER_CODE=00
+make -C "$WORK" firered -j"$(nproc)" -O \
+  TITLE="PM RED REMAK" \
+  GAME_CODE=RDXJ \
+  MAKER_CODE=00
 
 ROM="$WORK/pokefirered.gba"
 test -f "$ROM"
