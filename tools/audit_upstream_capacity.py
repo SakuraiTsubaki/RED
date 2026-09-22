@@ -6,6 +6,8 @@ from pathlib import Path
 TARGETS = {
     "species": 16,
     "heldItem": 16,
+    "language": 4,
+    "metGame": 5,
 }
 
 BASELINE_LIMITS = {
@@ -17,6 +19,8 @@ BASELINE_LIMITS = {
     "move4": 11,
     "teraType": 5,
     "pokeball": 6,
+    "language": 3,
+    "metGame": 4,
 }
 
 def widths(text: str):
