@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 2,
   "project": "RED",
   "title": "ポケットモンスター 赤",
   "originalGeneration": 1,
@@ -73,5 +73,17 @@
     }
   },
   "nativeSaveProfile": "JPN-RED-GBA",
-  "nativeSaveIsolation": true
+  "nativeSaveIsolation": true,
+  "generationSuperset": {
+    "repository": "SakuraiTsubaki/EMERALD",
+    "manifest": "manifests/generation-supersets.json",
+    "documentation": "docs/GENERATION_SUPERSET_MERGE.md",
+    "generationKey": "gen1",
+    "sourceProfile": "RED",
+    "mergePolicy": "union-preserve-variants",
+    "runtimeModes": [
+      "generation-superset",
+      "source-version-reproduction"
+    ]
+  }
 }
