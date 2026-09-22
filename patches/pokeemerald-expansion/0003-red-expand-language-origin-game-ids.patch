@@ -10,7 +10,7 @@ RED repacks existing bits so neither BoxPokemon nor PokemonSubstruct3 grows.
 
 --- a/include/pokemon.h
 +++ b/include/pokemon.h
-@@ -177,10 +177,9 @@
+@@ -177,11 +177,10 @@
  struct PokemonSubstruct3
  {
      u8 pokerus;
@@ -32,7 +32,7 @@ RED repacks existing bits so neither BoxPokemon nor PokemonSubstruct3 grows.
      u32 abilityNum:2;
  
      // The functionality of this bit changed in FRLG:
-@@ -205,14 +204,13 @@
+@@ -205,16 +204,15 @@
  struct BoxPokemon
  {
      u32 personality;
@@ -53,7 +53,7 @@ RED repacks existing bits so neither BoxPokemon nor PokemonSubstruct3 grows.
      u8 compressedStatus:4;
 --- a/src/pokemon.c
 +++ b/src/pokemon.c
-@@ -770,6 +770,8 @@
+@@ -770,5 +770,7 @@
  };
  
 +STATIC_ASSERT(NUM_LANGUAGES < 16, RED_BoxPokemon_language_PotentiallyTooSmall);
