@@ -21,10 +21,13 @@ done
 
 python3 "$ROOT/tools/audit_upstream_capacity.py" "$WORK"
 
+BUILD_LOG="$WORK/red-build.log"
 make -C "$WORK" firered -j"$(nproc)" -O \
   TITLE="PM RED REMAK" \
   GAME_CODE=RDXJ \
-  MAKER_CODE=00
+  MAKER_CODE=00 2>&1 | tee "$BUILD_LOG"
+
+python3 "$ROOT/tools/verify_red_memory.py" "$BUILD_LOG"
 
 ROM="$WORK/pokefirered.gba"
 test -f "$ROM"
