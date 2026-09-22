@@ -1,0 +1,63 @@
+From RED: widen language and origin-game persistence without growing BoxPokemon
+
+Target upstream:
+rh-hideout/pokeemerald-expansion@75b806a3ab57a81ff1eb6179288981f0b3cc3050
+
+The pinned core has no spare language IDs in its 3-bit BoxPokemon field and
+GameVersion already reaches value 15 in a 4-bit PokemonSubstruct3 field.
+
+RED repacks existing bits so neither BoxPokemon nor PokemonSubstruct3 grows.
+
+--- a/include/pokemon.h
++++ b/include/pokemon.h
+@@ -205,14 +205,13 @@
+ struct BoxPokemon
+ {
+     u32 personality;
+     u32 otId;
+     u8 nickname[min(10, POKEMON_NAME_LENGTH)];
+-    u8 language:3;
+-    u8 hiddenNatureModifier:5; // 31 natures.
++    u8 language:4; // 15 language IDs plus NONE/reserved.
+     u8 isBadEgg:1;
+     u8 hasSpecies:1;
+     u8 isEgg:1;
+     u8 blockBoxRS:1; // Unused, but Pokémon Box Ruby & Sapphire will refuse to deposit a Pokémon with this flag set.
++    u8 hiddenNatureModifier:5; // 31 natures.
+     u8 daysSinceFormChange:3; // 7 days.
+-    u8 unused_13:1;
+     u8 otName[PLAYER_NAME_LENGTH];
+     u8 markings:4;
+     u8 compressedStatus:4;
+@@ -177,10 +176,9 @@
+ struct PokemonSubstruct3
+ {
+     u8 pokerus;
+     u8 metLocation;
+     u16 metLevel:7;
+-    u16 metGame:4;
++    u16 metGame:5; // 31 origin-game IDs.
+     u16 dynamaxLevel:4;
+-    u16 otGender:1;
+     u32 hpIV:5;
+     u32 attackIV:5;
+     u32 defenseIV:5;
+@@ -202,7 +200,7 @@
+     u32 earthRibbon:1; // Given to teams that have beaten Mt. Battle's 100-battle challenge in Colosseum/XD.
+     u32 worldRibbon:1; // Distributed during Pokémon Festa '04 and '05 to tournament winners.
+     u32 isShadow:1;
+-    u32 unused_0B:1;
++    u32 otGender:1;
+     u32 abilityNum:2;
+ 
+     // The functionality of this bit changed in FRLG:
+--- a/src/pokemon.c
++++ b/src/pokemon.c
+@@ -770,6 +770,8 @@
+ };
+ 
++STATIC_ASSERT(NUM_LANGUAGES < 16, RED_BoxPokemon_language_PotentiallyTooSmall);
++STATIC_ASSERT(NUM_VERSIONS < 32, RED_PokemonSubstruct3_metGame_PotentiallyTooSmall);
+ STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
+ 
+ static u32 CompressStatus(u32 status)
