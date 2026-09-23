@@ -1,74 +1,41 @@
-# Bankswitch16 phase-1 implementation
+# Bankswitch16 phase-2 implementation
 
-## Resume point
+Phase 2 continues directly from phase 1.
 
-This work continues directly from the verified 8 MiB MBC5 container baseline.
-The next blocked item was the 512-bank bank-switch path.
+## ROM0 budget
 
-## Actual ROM census
+Japanese Rev0/RevA have verified unused RST0..RST30 bytes at `$0000-$0037`.
+Japanese `$0038` is not free; it contains `jp $F080`. The phase-2 core uses
+55 of the available 56 bytes and leaves `$0038+` untouched.
 
-The central legacy routines were signature-matched in all seven supplied ROMs.
-See `research/bankswitch-core-census.csv`.
+- `$0000` WriteBankBC — 13 bytes
+- `$000D` Bankswitch16 — 21 bytes
+- `$0022` VBlankEnterLow — 12 bytes
+- `$002E` VBlankExitLow — 9 bytes
 
-Japanese Rev 0:
+## 9-bit state
 
-- `BankswitchHome`: ROM offset `0x3606`
-- `BankswitchBack`: `0x3617`
-- `Bankswitch`: `0x3620`
-- loaded ROM bank HRAM byte: `0xFFB8`
-- audio temporary save/restore: `0x0E7B` / `0x0E9F`
+- `$FFB8`: low 8 bits
+- `$FFB9`: high bank bit
 
-Japanese Rev A:
+The audio path's old temporary use of `$FFB9` is replaced by equal-length
+stack save/restore. Init clears HRAM so the high state starts at zero.
 
-- `BankswitchHome`: `0x35F4`
-- `BankswitchBack`: `0x3605`
-- `Bankswitch`: `0x360E`
-- audio temporary save/restore: `0x0E69` / `0x0E8D`
+## VBlank safety
 
-The legacy routine accepts one 8-bit bank and writes only `$2000`.
+JP Rev0 and RevA both enter VBlank at `$0AAC` and directly write ROMB0 at
+`$0AE0`, `$0B01`, and `$0B29`.
 
-## Fixed-bank code space
+Phase 2 replaces the first and last writes with fixed-bank shims. The prior high
+bit remains on the interrupt stack, VBlank executes with high bit zero, and the
+full interrupted 9-bit bank is restored before RETI.
 
-The original ROM and the reference disassembly both identify `$0000-$0037`
-(RST0 through RST30) as unused sentinel space. Phase 1 uses only
-`$0000-$0025` for a 38-byte `Bankswitch16` routine.
+Timer and Serial contain no direct ROMB0 writes in the supplied JP ROMs.
 
-ABI:
+## Remaining blockers
 
-- BC = 9-bit MBC5 bank number
-- C = low 8 bits
-- B bit 0 = bank bit 8
-- HL = target address
+Synchronous low-byte-only paths are still unsafe from banks 256-511. The next
+census/patch set covers audio, FarCopyData, predef, text, uncompress, names,
+pokemon/item helpers, map/NPC/hidden-event paths, and legacy farcall/homecall.
 
-It writes MBC5 ROMB0 at `$2000` and ROMB1 at `$3000`.
-
-## High-bank state without growing HRAM
-
-`hLoadedROMBank` at `$FFB8` remains the low byte.
-
-The following byte, `hSavedROMBank` at `$FFB9`, is referenced as temporary
-storage only by the audio path in the reference implementation. The supplied
-Japanese ROMs contain one matching save and one matching restore sequence.
-Phase 1 replaces those two 2-byte operations with equal-length
-`push af; nop` / `pop af; nop`, freeing `$FFB9` to track the MBC5 high bit.
-
-The normal init path clears HRAM, so the high bank state starts at zero.
-
-## Critical interrupt gate
-
-This patch is intentionally **not boot-certified for executing bank 256+**.
-
-While high bank bit 8 is set, legacy VBlank/audio/predef/copy/direct switch paths
-that write only `$2000` are not safe: an interrupt can accidentally select
-`256 + low_bank`.
-
-Therefore the next phase is mandatory:
-
-1. enumerate every runtime write to ROM bank state;
-2. classify interrupt-time vs synchronous callers;
-3. make interrupt-time bank save/switch/restore 9-bit aware;
-4. add source-level `farcall16`/far-pointer support;
-5. only then execute code in banks 256-511 with interrupts enabled.
-
-The phase-1 patched ROM hashes are recorded in
-`research/gb-mbc5-core-patched-baselines.csv`; ROM files are not committed.
+Therefore `boot_certified=false` remains mandatory.

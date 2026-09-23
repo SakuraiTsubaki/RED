@@ -78,7 +78,7 @@
     "header_ram_size_code": "0x04",
     "preserve_sgb_flag": true,
     "boot_certified": false,
-    "boot_gate": "patch-and-verify-mbc5-9th-rom-bank-bit-path"
+    "boot_gate": "finish-direct-9bit-bank-switch-census-and-runtime-smoke-test"
   },
   "expanded_pointer_contract": {
     "legacy_far_pointer_bytes": 3,
@@ -140,7 +140,9 @@
     }
   },
   "implementation_gates": [
-    "mbc5-high-bank-register-3000-3fff-verified",
+    "mbc5-high-bank-register-3000-3fff-byte-path-implemented",
+    "vblank-9bit-bank-save-restore-implemented",
+    "synchronous-audio-and-direct-bank-switch-paths-9bit-aware",
     "banked-call-and-far-pointer-census-complete",
     "species-move-item-id-read-write-census-complete",
     "expanded-save-roundtrip-tested",
@@ -152,5 +154,25 @@
     "canonical-ids-never-depend-on-localized-text",
     "unknown-future-content-is-not-fabricated",
     "gba-remake-is-a-separate-project"
-  ]
+  ],
+  "mbc5_core_patch": {
+    "phase": 2,
+    "japanese_profiles": [
+      "jp-red-rev0",
+      "jp-red-reva"
+    ],
+    "core_payload_bytes": 55,
+    "write_bank_bc_offset": "0x0000",
+    "bankswitch16_offset": "0x000D",
+    "vblank_enter_low_offset": "0x0022",
+    "vblank_exit_low_offset": "0x002E",
+    "h_loaded_rom_bank_low": "0xFFB8",
+    "h_loaded_rom_bank_high": "0xFFB9",
+    "vblank_9bit_safe": true,
+    "timer_direct_rom_bank_writes": 0,
+    "serial_direct_rom_bank_writes": 0,
+    "synchronous_audio_high_bank_safe": false,
+    "all_direct_paths_9bit_safe": false,
+    "boot_certified": false
+  }
 }
